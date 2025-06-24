@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Profile | WebShell</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <style>
+    body {
+      background: linear-gradient(to right, #0f2027, #203a43, #2c5364);
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2rem;
+    }
+
+    .profile-box {
+      max-width: 850px;
+      margin: auto;
+      background: rgba(255,255,255,0.06);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,255,255,0.2);
+    }
+
+    h2 {
+      text-align: center;
+      color: #00f0ff;
+      margin-bottom: 1rem;
+    }
+
+    .info-block {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .stat-grid {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: rgba(0, 0, 0, 0.2);
+      padding: 1rem 2rem;
+      border-radius: 8px;
+      text-align: center;
+      flex: 1;
+      min-width: 150px;
+      color: white;
+      box-shadow: 0 0 10px rgba(0,255,255,0.1);
+    }
+
+    .green { color: #00ff99; }
+    .red { color: #ff4d4d; }
+    .yellow { color: #ffff66; }
+
+    table {
+      width: 100%;
+      font-size: 0.95rem;
+    }
+
+    th, td {
+      text-align: center;
+      word-break: break-word;
+    }
+
+    th {
+      background-color: #00bcd4;
+      color: black;
+    }
+
+    tr:nth-child(even) {
+      background-color: rgba(255,255,255,0.05);
+    }
+
+    .btn-back {
+      margin-top: 2rem;
+      display: block;
+      text-align: center;
+    }
+
+    .btn-back a {
+      background: #00e6e6;
+      padding: 0.5rem 1.5rem;
+      border-radius: 8px;
+      text-decoration: none;
+      color: black;
+      font-weight: bold;
+    }
+
+    .btn-back a:hover {
+      background: #00bcbc;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="profile-box">
+    <h2>👤 {{ user_data.first_name }} {{ user_data.last_name }}'s Profile</h2>
+
+    <div class="info-block">
+      <p><strong>Email:</strong> {{ user_data.email }}</p>
+      <p><strong>Username:</strong> {{ user_data.username }}</p>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card yellow">
+        <h4>Total Scans</h4>
+        <p><strong>{{ stats.total }}</strong></p>
+      </div>
+      <div class="stat-card green">
+        <h4>Clean Files</h4>
+        <p><strong>{{ stats.clean }}</strong></p>
+      </div>
+      <div class="stat-card red">
+        <h4>Malicious Files</h4>
+        <p><strong>{{ stats.malicious }}</strong></p>
+      </div>
+      <div class="stat-card" style="color:#ffa500">
+        <h4>Errors</h4>
+        <p><strong>{{ stats.errors }}</strong></p>
+      </div>
+    </div>
+
+    <h4 class="text-center mt-4">📜 Recent Scan History</h4>
+    <table class="table table-bordered mt-2">
+      <thead>
+        <tr>
+          <th>Filename</th>
+          <th>Result</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in recent_scans %}
+        <tr>
+          <td>{{ row[0] }}</td>
+          <td style="color: {{ 'lime' if 'clean' in row[1]|lower else ('red' if 'malicious' in row[1]|lower else 'orange') }}">{{ row[1] }}</td>
+          <td>{{ row[2] }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="btn-back">
+      <a href="/dashboard">← Back to Dashboard</a>
+    </div>
+  </div>
+
+</body>
+</html>

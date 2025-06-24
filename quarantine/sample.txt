@@ -1,0 +1,3 @@
+# This is a simple user file
+print("Welcome to our secure system!")
+No hidden commands here.

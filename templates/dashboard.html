@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>WebShell Dashboard</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
+  <style>
+    body {
+      background: radial-gradient(ellipse at center, #0f2027, #203a43, #2c5364);
+      color: white;
+      font-family: 'Segoe UI', sans-serif;
+      padding: 2rem;
+    }
+
+    .dashboard-header {
+      font-size: 2.4rem;
+      text-align: center;
+      margin-bottom: 2rem;
+      color: #00f0ff;
+      font-weight: 600;
+    }
+
+    .card-section {
+      display: flex;
+      justify-content: center;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 16px;
+      padding: 2rem;
+      width: 260px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+      transition: transform 0.3s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .card-label {
+      font-size: 1.2rem;
+      color: #ccc;
+    }
+
+    .card-value {
+      font-size: 2.8rem;
+      font-weight: bold;
+    }
+
+    .green { color: #00ff99; }
+    .red { color: #ff4d4d; }
+    .yellow { color: #ffff66; }
+
+    .button-group {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+
+    }
+
+    .action-btn {
+      background-color: #00e6e6;
+      color: black;
+      font-weight: bold;
+      border: none;
+      padding: 0.7rem 1.5rem;
+      border-radius: 10px;
+      transition: background 0.3s;
+      text-decoration: none;
+    }
+
+    .action-btn:hover {
+      background-color: #00b3b3;
+    }
+
+    .alert {
+      max-width: 600px;
+      margin: 1rem auto;
+      font-weight: bold;
+      color: black;
+    }
+
+    .logout-btn {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      background-color: #ff4d4d;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 10px;
+      text-decoration: none;
+    }
+
+    .logout-btn:hover {
+      background-color: #cc0000;
+    }
+
+    .chart-section {
+      margin-top: 3rem;
+      background: rgba(255,255,255,0.05);
+      padding: 1rem;
+      border-radius: 10px;
+    }
+
+    canvas {
+      max-width: 100%;
+    }
+  </style>
+</head>
+<body>
+
+  <a href="/logout" class="logout-btn">Logout</a>
+
+  <div class="dashboard-header">🛡️ WebShell Detection Dashboard</div>
+
+  <div class="card-section">
+    <div class="stat-card">
+      <div class="card-label">Total Files Scanned</div>
+      <div class="card-value yellow">{{ total }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="card-label">Clean Files</div>
+      <div class="card-value green">{{ clean }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="card-label">Malicious Files</div>
+      <div class="card-value red">{{ malicious }}</div>
+    </div>
+  </div>
+
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <div class="alert alert-info text-center">
+        {% for message in messages %}
+          {{ message }}
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+<div class="button-group">
+  <a href="/upload" class="action-btn">Upload File</a>
+  <a href="/check_url" class="action-btn">Scan Download Link</a>
+  <a href="/results" class="action-btn">Scan History</a>
+  <a href="/profile" class="action-btn">👤 View Profile</a> <!-- 👈 add this -->
+</div>
+
+
+  <!-- 📊 Chart Section -->
+  <div class="chart-section mt-5">
+    <h4 style="text-align:center; color:#00e6e6;">📊 Scan Summary Chart</h4>
+    <canvas id="scanChart" width="400" height="200"></canvas>
+  </div>
+
+  <!-- Chart.js CDN + Chart Script -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    const ctx = document.getElementById('scanChart').getContext('2d');
+    const scanChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Total Scans', 'Clean Files', 'Malicious Files'],
+        datasets: [{
+          label: 'File Count',
+          data: [{{ total }}, {{ clean }}, {{ malicious }}],
+          backgroundColor: [
+            'rgba(255, 255, 102, 0.7)',
+            'rgba(0, 255, 153, 0.7)',
+            'rgba(255, 77, 77, 0.7)'
+          ],
+          borderColor: [
+            'rgba(255, 255, 102, 1)',
+            'rgba(0, 255, 153, 1)',
+            'rgba(255, 77, 77, 1)'
+          ],
+          borderWidth: 2
+        }]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { color: 'white' },
+            grid: { color: '#444' }
+          },
+          x: {
+            ticks: { color: 'white' },
+            grid: { color: '#444' }
+          }
+        },
+        plugins: {
+          legend: {
+            labels: { color: 'white' }
+          }
+        }
+      }
+    });
+  </script>
+
+</body>
+</html>
