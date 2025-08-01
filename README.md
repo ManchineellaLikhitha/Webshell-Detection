@@ -96,7 +96,7 @@ webshell-detector/
 ├── webshell.db
 └── README.md
 ```
-### ✍️ Resume Points
+### ✍️ Summary Points
 - Built a complete web app that detects malicious code/files using Flask and VirusTotal API.
 - Implemented dashboard, user profiles, and scanning system with real-time analytics and quarantine logic.
 - Integrated chart visualizations and dynamic scanning using both local logic and external malware engines.
